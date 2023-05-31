@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<!-- main page -->
+
+<h1>RRI</h1>
+<a href="/user">log in</a>
+<a href="/coach">coach log in</a>
+
+<script>
+</script>
+
+<style>
+	/* Write your CSS here */
+</style>
