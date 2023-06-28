@@ -1,67 +1,64 @@
 <script>
-    import { collection, addDoc } from "firebase/firestore";
-    import { db } from '../../db/dbconfig.js';
-    import SvelteTable from 'svelte-table';
-    import { qso } from './dataQuery.js';
-    import { Modal, Content, Trigger } from "sv-popup"
-    let closeModal = false;
+    import { fetchData, qso, submit } from '../../db/dataQuery.js';
+    import { Button, Modal, Label, Input } from 'flowbite-svelte'
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     
-    let name = "";
-    let style = "";
-    async function submit() {
-        try {
-            const docRef = await addDoc(collection(db, "oars"), {
-                name: name,
-                style: style,
-            });
-            console.log("Document written with ID: ", docRef.id);
-            alert('Submitted successfully');
-            closeModal = true;
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    }
-    
-    let oarData = [];
-    qso.forEach((doc) => {
-        oarData.push(doc.data());
-    });
-    const rows = oarData;
-    
-    const columns = [
-    {
-        key: "name",
-        title: "Name",
-        value: v => v.name,
-        sortable: true,
-    },
-    {
-        key: "style",
-        title: "Style",
-        value: v => v.style,
-        sortable: true,
-    }
-    ];
-    
+    let info = ["oars", "", ""];
+    let formModal = false;
+    let items = fetchData(qso);
+
+    function handleClick() {
+        submit(info)
+        formModal = false;
+    }    
+
 </script>
 
-<Modal basic close={closeModal}>
-    <Content>
-        <form id="form">
-            <label>Name: 
-                <input type="text" id="name" name="name" bind:value={name} required/>
-            </label>
-            <br><br>
-            <label>Style: 
-                <input type="text" id="style" name="style" bind:value={style} required/>
-            </label>
-            <br><br>
-            <button on:click={submit}>Submit</button><br><br>
-        </form>    
-    </Content>
-    <Trigger>
-        <button class="btn">Add an Oar</button>
-    </Trigger>
+<Button on:click={() => formModal = true}>Add an Oar</Button>
+
+<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
+    <form class="flex flex-col space-y-6" action="#">
+        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add an Oar</h3>
+        <Label class="space-y-2">
+            <span>Name</span>
+            <Input type="text" id="name" name="name" bind:value={info[1]} required />
+        </Label>
+        <Label class="space-y-2">
+            <span>Style</span>
+            <Input type="text" id="age" name="age" bind:value={info[2]} required />
+        </Label>
+        <Button type="submit" class="w-full1" on:click={handleClick}>Submit</Button>
+    </form>
 </Modal>
 
-<SvelteTable columns="{columns}" rows="{rows}"></SvelteTable>
+<Table hoverable={true}>
+    <TableHead>
+        <TableHeadCell>Name</TableHeadCell>
+        <TableHeadCell>Style</TableHeadCell>
+        <TableHeadCell>
+            <span class="sr-only"> Edit </span>
+        </TableHeadCell>
+        <TableHeadCell>
+            <span class="sr-only"> Delete </span>
+        </TableHeadCell>
+    </TableHead>
+    <TableBody class="divide-y">
+        {#each items as item}
+        <TableBodyRow>
+            <TableBodyCell>{item.name}</TableBodyCell>
+            <TableBodyCell>{item.style}</TableBodyCell>
+            <TableBodyCell>
+                <span class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                  Edit
+                </span>
+              </TableBodyCell>
+              <TableBodyCell>
+                <span class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                  Delete
+                </span>
+              </TableBodyCell>
+        </TableBodyRow>
+        {/each}
+    </TableBody>
+</Table>
+

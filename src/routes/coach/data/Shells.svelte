@@ -1,71 +1,55 @@
 <script>
-    import { collection, addDoc } from "firebase/firestore";
-    import { db } from '../../db/dbconfig.js';
-    import SvelteTable from 'svelte-table';
-    import { qss } from './dataQuery.js';
-    import { Modal, Content, Trigger } from "sv-popup"
-    let closeModal = false;
+    import { fetchData, qss, submit } from '../../db/dataQuery.js';
+    import { Button, Modal, Label, Input } from 'flowbite-svelte'
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     
-    let name = "";
-    let style = "";
-    async function submit() {
-        try {
-            const docRef = await addDoc(collection(db, "shells"), {
-                name: name,
-                style: style,
-            });
-            console.log("Document written with ID: ", docRef.id);
-            alert('Submitted successfully');
-            closeModal = true;
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-        
-    }
-    
-    let shellData = [];
-    qss.forEach((doc) => {
-        shellData.push(doc.data());
-    });
-    const rows = shellData;
-    
-    const columns = [
-    {
-        key: "name",
-        title: "Name",
-        value: v => v.name,
-        sortable: true,
-    },
-    {
-        key: "size",
-        title: "Size",
-        value: v => v.size,
-        sortable: true,
-    }
-    ];
+    let info = ["shells", "", ""];
+    let formModal = false;
+    let items = fetchData(qss);
+
+    function handleClick() {
+        submit(info)
+        formModal = false;
+    }    
     
 </script>
 
-<Modal basic close={closeModal}>
-    <Content>
-        <form id="form">
-            <label>Shell Name: 
-                <input type="text" id="name" name="name" bind:value={name} required/>
-            </label>
-            <br><br>
-            <label>Shell Size: 
-                <input type="text" id="size" name="size" bind:value={style} required/>
-            </label>
-            <br><br>
-            <button on:click={submit}>Submit</button><br><br>
-        </form>
-    </Content>
-    <Trigger>
-        <button class="btn">Add a Shell</button>
-    </Trigger>
+<Button on:click={() => formModal = true}>Add a Shell</Button>
+
+<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
+    <form class="flex flex-col space-y-6" action="#">
+        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add a Shell</h3>
+        <Label class="space-y-2">
+            <span>Name</span>
+            <Input type="text" id="name" name="name" bind:value={info[1]} required />
+        </Label>
+        <Label class="space-y-2">
+            <span>Size</span>
+            <Input type="text" id="age" name="age" bind:value={info[2]} required />
+        </Label>
+        <Button type="submit" class="w-full1" on:click={handleClick}>Submit</Button>
+    </form>
 </Modal>
 
-<SvelteTable columns="{columns}" rows="{rows}"></SvelteTable>
+<Table hoverable={true}>
+    <TableHead>
+        <TableHeadCell>Name</TableHeadCell>
+        <TableHeadCell>Size</TableHeadCell>
+        <TableHeadCell>
+            <span class="sr-only"> Edit </span>
+        </TableHeadCell>
+    </TableHead>
+    <TableBody class="divide-y">
+        {#each items as item}
+        <TableBodyRow>
+            <TableBodyCell>{item.name}</TableBodyCell>
+            <TableBodyCell>{item.size}</TableBodyCell>
+        </TableBodyRow>
+        {/each}
+    </TableBody>
+</Table>
+
+
 
 
 

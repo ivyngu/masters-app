@@ -1,94 +1,58 @@
 <script>
-    import { collection, addDoc } from "firebase/firestore";
-    import { db } from '../../db/dbconfig.js';
-    import { qsc } from './dataQuery.js';
-    import SvelteTable from 'svelte-table';
-    import { Modal, Content, Trigger } from "sv-popup"
-    import { fail } from '@sveltejs/kit';
-    let error = false;
-    let errorMsg = "";
-    let closeModal = false;
-    // make class for blank - component
+    import { fetchData, qsc, submit } from '../../db/dataQuery.js';
+    import { Button, Modal, Label, Input } from 'flowbite-svelte'
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     
-    let name = "";
-    let age = "";
-    let weight = "";
+    let formModal = false;
+
+    let info = ["coxswains", "", "", ""];
     
-    async function submit() {
-        if (coxData.includes(name)) {
-            error = true;
-            errorMsg = "User has to be unique";
-            return;
-        }
-        try {
-            
-            const docRef = await addDoc(collection(db, "coxswains"), {
-                name: name,
-                age: age,
-                weight: weight,
-            });
-            console.log("Document written with ID: ", docRef.id);
-            alert('Submitted successfully');
-            closeModal = true;
-        } catch (e) {
-            console.log("nope");
-        }
+    let items = fetchData(qsc);
+    function handleClick() {
+        submit(info)
+        formModal = false;
     }
-    
-    let coxData = [];
-    qsc.forEach((doc) => {
-        coxData.push(doc.data());
-    });
-    const rows = coxData;
-    
-    const columns = [
-    {
-        key: "name",
-        title: "Name",
-        value: v => v.name,
-        sortable: true,
-    },
-    {
-        key: "age",
-        title: "Age",
-        value: v => v.age,
-        sortable: true,
-    },
-    {
-        key: "weight",
-        title: "Weight",
-        value: v => v.weight,
-        sortable: true,
-    }
-    ];
-    
+
 </script>
 
-{#if error}
-	<p class="error">{errorMsg}</p>
-{/if}
 
-<Modal basic close={closeModal}>
-    <Content>
-        <form id="form">
-            <label>Name: 
-                <input type="text" id="name" name="name" bind:value={name} placeholder="" required/>
-            </label>
-            <br><br>
-            <label>Age: 
-                <input type="text" id="age" name="age" bind:value={age} required/>
-            </label>
-            <br><br>
-            <label>Weight: 
-                <input type="text" id="weight" name="weight" bind:value={weight} required/>
-            </label>
-            <br><br>
-            <button on:click={submit}>Submit</button><br><br>
-        </form>    
-    </Content>
-    <Trigger>
-        <button class="btn">Add a Coxswain</button>
-    </Trigger>
+<Button on:click={() => formModal = true}>Add a Coxswain</Button>
+
+<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
+    <form class="flex flex-col space-y-6" action="#">
+        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add a Coxswain</h3>
+        <Label class="space-y-2">
+            <span>Name</span>
+            <Input type="text" id="name" name="name" placeholder=" " bind:value={info[1]} required />
+        </Label>
+        <Label class="space-y-2">
+            <span>Age</span>
+            <Input type="text" id="age" name="age" bind:value={info[2]} required />
+        </Label>
+        <Label class="space-y-2">
+            <span>Weight</span>
+            <Input type="text" id="weight" name="weight" bind:value={info[3]} required />
+        </Label>
+        <Button type="submit" class="w-full1" on:click={handleClick}>Submit</Button>
+    </form>
 </Modal>
 
-<SvelteTable columns="{columns}" rows="{rows}"></SvelteTable>
+<Table hoverable={true}>
+    <TableHead>
+        <TableHeadCell>Name</TableHeadCell>
+        <TableHeadCell>Age</TableHeadCell>
+        <TableHeadCell>Weight</TableHeadCell>
+        <TableHeadCell>
+            <span class="sr-only"> Edit </span>
+        </TableHeadCell>
+    </TableHead>
+    <TableBody class="divide-y">
+        {#each items as item}
+        <TableBodyRow>
+            <TableBodyCell>{item.name}</TableBodyCell>
+            <TableBodyCell>{item.age}</TableBodyCell>
+            <TableBodyCell>{item.weight}</TableBodyCell>
+        </TableBodyRow>
+        {/each}
+    </TableBody>
+</Table>
