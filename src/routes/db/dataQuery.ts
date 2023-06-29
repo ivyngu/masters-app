@@ -17,10 +17,12 @@ const ql = query(collection(db, "lineups"));
 export const qsl = await getDocs(ql);
 
 export function fetchData(database: QuerySnapshot<DocumentData>) {
+    
     let data: any[] = [];
     database.forEach((doc: { data: () => any; }) => {
         data.push({value: doc.data(), name: doc.data()});
     });
+    
     return data;
 }
 
