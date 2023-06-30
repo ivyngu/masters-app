@@ -1,4 +1,4 @@
-import { collection, query, getDocs, addDoc, QuerySnapshot } from "firebase/firestore";
+import { collection, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "./dbconfig.js";
 const qc = query(collection(db, "coxswains"));
 export const qsc = await getDocs(qc);
@@ -8,6 +8,8 @@ const qs = query(collection(db, "shells"));
 export const qss = await getDocs(qs);
 const qo = query(collection(db, "oars"));
 export const qso = await getDocs(qo);
+const ql = query(collection(db, "lineups"));
+export const qsl = await getDocs(ql);
 export function fetchData(database) {
     let data = [];
     database.forEach((doc) => {
@@ -35,5 +37,8 @@ export async function submit(info) {
     catch (e) {
         console.log("nope");
     }
+}
+export async function deleteItem(info) {
+    deleteDoc(doc(db, info[0], info[1]));
 }
 //# sourceMappingURL=dataQuery.js.map
