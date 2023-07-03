@@ -2,6 +2,10 @@ import { collection, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, onSn
 import { db } from "./dbconfig.js";
 const qc = query(collection(db, "coxswains"));
 export const qsc = await getDocs(qc);
+const qename = query(collection(db, "evtname"));
+export const qsename = await getDocs(qename);
+const qenum = query(collection(db, "evtnum"));
+export const qsenum = await getDocs(qenum);
 const qr = query(collection(db, "rowers"));
 export const qsr = await getDocs(qr);
 const qs = query(collection(db, "shells"));
@@ -16,6 +20,23 @@ export function fetchData(database) {
         data.push(doc.data());
     });
     return data;
+}
+export async function submitLineUp(info, team) {
+    try {
+        const docRef = await addDoc(collection(db, "lineups"), {
+            day: info[0],
+            evtnum: info[1],
+            evtname: info[2],
+            oar: info[3],
+            shell: info[4],
+            cox: info[5],
+            team: team
+        });
+        console.log("Document written with ID: ", docRef.id);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 function setInfo(info) {
     return (info.length == 4) ? { name: info[1], age: info[2], weight: info[3] }

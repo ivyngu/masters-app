@@ -1,6 +1,6 @@
 <script>
   import { query, collection, where, getDocs } from 'firebase/firestore';
-  import { fetchData, qsc, qss, qso, qsr, submit } from '../../db/dataQuery.js';
+  import { fetchData, qsc, qss, qso, qsr, qsename, qsenum, submitLineUp } from '../../db/dataQuery.js';
   import { db } from '../../db/dbconfig.js';
   import { Button, Modal, Label, Select } from 'flowbite-svelte'
   let formModal = false;
@@ -11,9 +11,9 @@
   {value:"Sunday", name: "Sunday"}
   ]
   // day, evtnum, evtname, shell, oar, cox
-  let team = [];
-  let evtnums = []; // have to parse thru this later & assign
-  let evtname = []; // have to parse thru this later & assign
+  let selectedTeam = [];
+  let evtnums = fetchData(qsenum); // have to parse thru this later & assign
+  let evtnames = fetchData(qsename); // have to parse thru this later & assign
   
   let selectedDay;
   let selectedEvtNum;
@@ -30,17 +30,23 @@
   let rowers = fetchData(qsr);
   
   function handleClick() {
-    let info = Array(7);
-    info[0] = "lineups"
-    info[1] = selectedDay;
-    info[2] = selectedEvtNum;
-    info[3] = selectedEvtName;
-    info[4] = selectedOar.name;
-    info[5] = selectedShell;
-    info[6] = selectedCox;
-    console.log(info);
-    submit(info)
+    let info = Array(6);
+    info[0] = selectedDay.name;
+    info[1] = selectedEvtNum.name;
+    info[2] = selectedEvtName.name;
+    info[3] = selectedOar.name;
+    info[4] = selectedShell.name;
+    info[5] = selectedCox.name;
+    submitLineUp(info, setTeam());
     formModal = false;
+  }
+
+  function setTeam() {
+    let team = [];
+    for (let i = 0; i < selectedTeam.length; i++) {
+      team[i] = selectedTeam[i].name;
+    }
+    return team;
   }
   
   async function readShell() {
@@ -55,33 +61,78 @@
   function addTeamInput() {
     teamLabels = [];
     for (let i = 1; i <= teamSize; i++) {
-      teamLabels = teamLabels.concat({label: "Rower " + i, bind:team[i], select: rowers});
+      teamLabels = teamLabels.concat({label: "Rower " + i, bind: selectedTeam[i], select: rowers});
     }
+  }
+
+  function print() {
+    console.log(selectedTeam)
   }
 
   let teamLabels = [];
 
-  let questions = [
-  {label: "day", bind: selectedDay, select: days},
-  {label: "event number", bind: selectedEvtNum, select: evtnums},
-  {label: "event name", bind: selectedEvtName, select: evtname},
-  {label: "coxswain", bind: selectedCox, select: coxs},
-  {label: "oars", bind: selectedOar, select: oars}
-  ]
-    
 </script>
 
 <Button on:click={() => formModal = true}>Add a Lineup</Button>
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
   <form class="flex flex-col space-y-6" action="#">
-
-  {#each questions as question}
-    <Label class="space-y-2">{question.label}
-      <Select class="mt-2" placeholder="Choose" items={question.select} bind:value={question.bind} required />
-    </Label>
-  {/each}
   
+  <Label class="space-y-2">
+    <span>Day</span>
+    <Select bind:value={selectedDay} placeholder="Choose">
+      {#each days as day}
+      <option value={day}>
+        {day.name}
+      </option>
+      {/each}
+    </Select>
+  </Label>
+
+  <Label class="space-y-2">
+    <span>Event Number</span>
+    <Select bind:value={selectedEvtNum} placeholder="Choose">
+      {#each evtnums as evtnum}
+      <option value={evtnum}>
+        {evtnum.name}
+      </option>
+      {/each}
+    </Select>
+  </Label>
+
+  <Label class="space-y-2">
+    <span>Event Name</span>
+    <Select bind:value={selectedEvtName} placeholder="Choose">
+      {#each evtnames as evtname}
+      <option value={evtname}>
+        {evtname.name}
+      </option>
+      {/each}
+    </Select>
+  </Label>
+
+  <Label class="space-y-2">
+    <span>Coxswain</span>
+    <Select bind:value={selectedCox} placeholder="Choose">
+      {#each coxs as cox}
+      <option value={cox}>
+        {cox.name}
+      </option>
+      {/each}
+    </Select>
+  </Label>
+
+  <Label class="space-y-2">
+    <span>Oar</span>
+    <Select bind:value={selectedOar} placeholder="Choose">
+      {#each oars as oar}
+      <option value={oar}>
+        {oar.name}
+      </option>
+      {/each}
+    </Select>
+  </Label>
+
     <Label class="space-y-2">
       <span>Shell</span>
       <Select bind:value={selectedShell} on:change={readShell} placeholder="Choose">
@@ -93,9 +144,15 @@
       </Select>
     </Label>
   
-  {#each teamLabels as teamLabel}
+  {#each teamLabels as teamLabel, i}
     <Label class="space-y-2">{teamLabel.label}
-      <Select class="mt-2" placeholder="Choose" items={teamLabel.select.name} bind:value={teamLabel.bind} required />
+      <Select bind:value={selectedTeam[i]} on:change={print} placeholder="Choose">
+        {#each rowers as rower}
+        <option value={rower}>
+          {rower.name}
+        </option>
+        {/each}
+      </Select>
     </Label>
   {/each}
 </form>
