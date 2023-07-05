@@ -17,7 +17,8 @@ export const qsl = await getDocs(ql);
 export function fetchData(database) {
     let data = [];
     database.forEach((doc) => {
-        data.push(doc.data());
+        let item = { ...doc.data(), id: doc.id };
+        data.push(item);
     });
     return data;
 }
@@ -59,7 +60,13 @@ export async function submit(info) {
         console.log("nope");
     }
 }
-export async function deleteItem(info) {
-    deleteDoc(doc(db, info[0], info[1]));
+export async function deleteItem(type, id) {
+    try {
+        await deleteDoc(doc(db, type, id));
+        console.log("yay");
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 //# sourceMappingURL=dataQuery.js.map

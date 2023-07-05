@@ -25,7 +25,8 @@ export const qsl = await getDocs(ql);
 export function fetchData(database: QuerySnapshot<DocumentData>) {
     let data: any[] = [];
     database.forEach((doc) => {
-        data.push(doc.data());
+        let item = { ...doc.data(), id: doc.id };
+        data.push(item);
     });
     return data;
 }
@@ -70,6 +71,11 @@ export async function submit(info: string[]) {
     }
 }
 
-export async function deleteItem(info: string[]) {
-    deleteDoc(doc(db, info[0], info[1]));
+export async function deleteItem(type: string, id: string) {
+    try {
+        await deleteDoc(doc(db, type, id));
+        console.log("yay");
+    } catch (e) {
+        console.log(e);
+    }
 }

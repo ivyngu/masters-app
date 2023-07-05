@@ -1,5 +1,5 @@
 <script>
-    import { fetchData, qss, submit } from '../../db/dataQuery.js';
+    import { fetchData, qss, submit, deleteItem } from '../../db/dataQuery.js';
     import { Button, Modal, Label, Input } from 'flowbite-svelte'
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     
@@ -44,6 +44,16 @@
         <TableBodyRow>
             <TableBodyCell>{item.name}</TableBodyCell>
             <TableBodyCell>{item.size}</TableBodyCell>
+            <TableBodyCell>
+                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                  Edit
+                </button>
+              </TableBodyCell>
+              <TableBodyCell>
+                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500" on:click={() => deleteItem("shells", item.id)}>
+                  Delete
+                </button>
+              </TableBodyCell>
         </TableBodyRow>
         {/each}
     </TableBody>

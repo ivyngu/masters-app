@@ -2,7 +2,7 @@
   import { query, collection, where, getDocs } from 'firebase/firestore';
   import { fetchData, qsc, qss, qso, qsr, qsename, qsenum, submitLineUp } from '../../db/dataQuery.js';
   import { db } from '../../db/dbconfig.js';
-  import { Button, Modal, Label, Select } from 'flowbite-svelte'
+  import { Button, Modal, Label, Select, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte'
   let formModal = false;
   let days = [
   {value:"Thursday", name: "Thursday"},
@@ -10,7 +10,7 @@
   {value:"Saturday", name: "Saturday"},
   {value:"Sunday", name: "Sunday"}
   ]
-  // day, evtnum, evtname, shell, oar, cox
+
   let selectedTeam = [];
   let evtnums = fetchData(qsenum); // have to parse thru this later & assign
   let evtnames = fetchData(qsename); // have to parse thru this later & assign
@@ -21,6 +21,7 @@
   let selectedOar;
   let selectedCox;
   let selectedShell;
+  let average;
   
   let teamSize;
   
@@ -29,6 +30,16 @@
   let coxs = fetchData(qsc);
   let rowers = fetchData(qsr);
   
+  function resetLineUp() {
+  selectedDay = null;
+  selectedEvtNum = null;
+  selectedEvtName = null;
+  selectedOar = null;
+  selectedCox = null;
+  selectedShell = null;
+  selectedTeam = [];
+}
+
   function handleClick() {
     let info = Array(6);
     info[0] = selectedDay.name;
@@ -39,6 +50,7 @@
     info[5] = selectedCox.name;
     submitLineUp(info, setTeam());
     formModal = false;
+    resetLineUp()
   }
 
   function setTeam() {
@@ -60,13 +72,23 @@
   
   function addTeamInput() {
     teamLabels = [];
+    selectedTeam = [];
     for (let i = 1; i <= teamSize; i++) {
-      teamLabels = teamLabels.concat({label: "Rower " + i, bind: selectedTeam[i], select: rowers});
+      teamLabels = teamLabels.concat({label: "Rower " + i, select: rowers});
     }
   }
 
-  function print() {
+  function calculateAvgWt() {
     console.log(selectedTeam)
+    let numPPL = 0;
+    let sum = 0;
+    for (let i = 0; i < selectedTeam.length; i++) {
+      if (selectedTeam[i] != "") {
+        numPPL += 1;
+        sum += parseInt(selectedTeam[i].weight);
+      }
+    }
+    average = (sum / numPPL);
   }
 
   let teamLabels = [];
@@ -146,7 +168,7 @@
   
   {#each teamLabels as teamLabel, i}
     <Label class="space-y-2">{teamLabel.label}
-      <Select bind:value={selectedTeam[i]} on:change={print} placeholder="Choose">
+      <Select bind:value={selectedTeam[i]} on:change={calculateAvgWt} placeholder="Choose">
         {#each rowers as rower}
         <option value={rower}>
           {rower.name}
@@ -155,8 +177,9 @@
       </Select>
     </Label>
   {/each}
+
+  <span>Average Weight: {average}</span>
 </form>
 
   <Button type="submit" class="w-full1" on:click={handleClick}>Submit</Button>
 </Modal>
-
