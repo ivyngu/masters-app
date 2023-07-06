@@ -1,4 +1,4 @@
-import { collection, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "./dbconfig.js";
 const qc = query(collection(db, "coxswains"));
 export const qsc = await getDocs(qc);
@@ -14,10 +14,10 @@ const qo = query(collection(db, "oars"));
 export const qso = await getDocs(qo);
 const ql = query(collection(db, "lineups"));
 export const qsl = await getDocs(ql);
-export function fetchData(database) {
+export function fetchData(database, type) {
     let data = [];
     database.forEach((doc) => {
-        let item = { ...doc.data(), id: doc.id };
+        let item = { ...doc.data(), id: doc.id, db: type };
         data.push(item);
     });
     return data;
@@ -63,6 +63,15 @@ export async function submit(info) {
 export async function deleteItem(type, id) {
     try {
         await deleteDoc(doc(db, type, id));
+        console.log("yay");
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+export async function saveItem(type, id, updated) {
+    try {
+        await updateDoc(doc(db, type, id), updated);
         console.log("yay");
     }
     catch (e) {

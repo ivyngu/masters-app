@@ -1,12 +1,12 @@
 <script>
-    import { fetchData, qso, submit, deleteItem} from '../../db/dataQuery.js';
-    import { Button, Modal, Label, Input } from 'flowbite-svelte'
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-    
-    let editing = false;
+    import { fetchData, qso, submit} from '../../db/dataQuery.js';
+    import { Button, Modal, Label, Input } from 'flowbite-svelte';
+    import { Table, TableHead, TableHeadCell, TableBodyCell } from 'flowbite-svelte';
+    import ListItem from '../../../components/ListItem.svelte';
+
     let info = ["oars", "", ""];
     let formModal = false;
-    let items = fetchData(qso);
+    let items = fetchData(qso, "oars");
 
     function handleClick() {
         submit(info)
@@ -42,40 +42,8 @@
             <span class="sr-only"> Delete </span>
         </TableHeadCell>
     </TableHead>
-    <TableBody class="divide-y">
-        {#each items as item}
-        {#if editing}
-        <TableBodyRow>
-            <TableBodyCell>{item.name}</TableBodyCell>
-            <TableBodyCell>{item.style}</TableBodyCell>
-            <TableBodyCell>
-                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                  Save
-                </button>
-              </TableBodyCell>
-              <TableBodyCell>
-                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                  Cancel
-                </button>
-              </TableBodyCell>
-        </TableBodyRow>
-        {:else}
-        <TableBodyRow>
-            <TableBodyCell>{item.name}</TableBodyCell>
-            <TableBodyCell>{item.style}</TableBodyCell>
-            <TableBodyCell>
-                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500" on:click={() => editing = true}>
-                  Edit
-                </button>
-              </TableBodyCell>
-              <TableBodyCell>
-                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500" on:click={() => deleteItem("oars", item.id)}>
-                  Delete
-                </button>
-              </TableBodyCell>
-        </TableBodyRow>
-        {/if}
-        {/each}
-    </TableBody>
+    {#each items as item}
+        <ListItem {item}  />     
+{/each}
 </Table>
 
