@@ -1,27 +1,36 @@
-import { collection, query, getDocs, addDoc, QuerySnapshot, type DocumentData, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, getDocs, addDoc, QuerySnapshot, type DocumentData, deleteDoc, doc, updateDoc, where } from "firebase/firestore";
 import { db } from "./dbconfig.js";
 
 const qc = query(collection(db, "coxswains"));
-export const qsc = await getDocs(qc);
+const qsc = await getDocs(qc);
+export let coxswains = fetchData(qsc, "coxswains");
 
-const qename = query(collection(db, "evtname"));
-export const qsename = await getDocs(qename);
+const qevtname = query(collection(db, "evtname"));
+const qsevtname = await getDocs(qevtname);
+export let evtnames = fetchData(qsevtname, "evtname");
 
-const qenum = query(collection(db, "evtnum"));
-export const qsenum = await getDocs(qenum);
+const qevtnum = query(collection(db, "evtnum"));
+const qsevtnum = await getDocs(qevtnum);
+export let evtnums = fetchData(qsevtnum, "evtnum");
 
 const qr = query(collection(db, "rowers"));
 export const qsr = await getDocs(qr);
+export let rowers = fetchData(qsr, "rowers");
+
 
 const qs = query(collection(db, "shells"));
-export const qss = await getDocs(qs);
+const qss = await getDocs(qs);
+export let shells = fetchData(qss, "shells");
 
 const qo = query(collection(db, "oars"));
-export const qso = await getDocs(qo);
+const qso = await getDocs(qo);
+export let oars = fetchData(qso, "oars");
+
 
 const ql = query(collection(db, "lineups"));
 export const qsl = await getDocs(ql);
 
+  
 export function fetchData(database: QuerySnapshot<DocumentData>, type: string) {
     let data: any[] = [];
     database.forEach((doc) => {
@@ -88,3 +97,4 @@ export async function saveItem(type: string, id: string, updated: any) {
         console.log(e);
     }
 }
+

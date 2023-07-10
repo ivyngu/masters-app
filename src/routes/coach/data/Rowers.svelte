@@ -1,11 +1,11 @@
 <script>
-    import { fetchData, qsr, submit, deleteItem } from '../../db/dataQuery.js';
+    import { fetchData, rowers, submit, deleteItem } from '../../db/dataQuery.js';
     import { Button, Modal, Label, Input } from 'flowbite-svelte'
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     
     let formModal = false;
     let info = ["rowers", "", "", ""];
-    let items = fetchData(qsr);
+    let items = rowers;
 
     function handleClick() {
         submit(info)

@@ -1,9 +1,10 @@
 <script>
-  import { query, collection, where, getDocs } from 'firebase/firestore';
-  import { fetchData, qsc, qss, qso, qsr, qsename, qsenum, submitLineUp } from '../../db/dataQuery.js';
-  import { db } from '../../db/dbconfig.js';
+  import { coxswains, shells, oars, rowers, evtnames, evtnums, submitLineUp } from '../../db/dataQuery.js';
   import { Button, Modal, Label, Select, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte'
+  import { collection, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, updateDoc, where } from "firebase/firestore";
+import { db } from "../../db/dbconfig.js";
   let formModal = false;
+  
   let days = [
   {value:"Thursday", name: "Thursday"},
   {value:"Friday", name: "Friday"},
@@ -12,8 +13,6 @@
   ]
 
   let selectedTeam = [];
-  let evtnums = fetchData(qsenum); // have to parse thru this later & assign
-  let evtnames = fetchData(qsename); // have to parse thru this later & assign
   
   let selectedDay;
   let selectedEvtNum;
@@ -25,10 +24,6 @@
   
   let teamSize;
   
-  let shells = fetchData(qss);
-  let oars = fetchData(qso);
-  let coxs = fetchData(qsc);
-  let rowers = fetchData(qsr);
   
   function resetLineUp() {
   selectedDay = null;
@@ -60,15 +55,21 @@
     }
     return team;
   }
-  
-  async function readShell() {
-    const shellSize = query(collection(db, "shells"), where("name", "==", selectedShell.name));
-    const shellQuery = await getDocs(shellSize);
-    shellQuery.forEach((doc) => {
+
+  function onShellSelect() {
+    teamSize = readShellSize(selectedShell.name);
+    console.log(teamSize);
+    addTeamInput()
+  }
+
+  async function readShellSize(name) {
+    const qShellSize = query(collection(db, "shells"), where("name", "==", name));
+    const qsShellSize = await getDocs(qShellSize);
+    qsShellSize.forEach((doc) => {
       teamSize = doc.data().size;
     });
-    addTeamInput(); 
-  }
+    addTeamInput();
+ }
   
   function addTeamInput() {
     teamLabels = [];
@@ -134,9 +135,9 @@
   </Label>
 
   <Label class="space-y-2">
-    <span>Coxswain</span>
+    <span>coxswainswain</span>
     <Select bind:value={selectedCox} placeholder="Choose">
-      {#each coxs as cox}
+      {#each coxswains as cox}
       <option value={cox}>
         {cox.name}
       </option>
@@ -157,7 +158,7 @@
 
     <Label class="space-y-2">
       <span>Shell</span>
-      <Select bind:value={selectedShell} on:change={readShell} placeholder="Choose">
+      <Select bind:value={selectedShell} on:change={readShellSize} placeholder="Choose">
         {#each shells as shell}
         <option value={shell}>
           {shell.name}

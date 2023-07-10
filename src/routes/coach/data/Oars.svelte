@@ -1,12 +1,12 @@
 <script>
-    import { fetchData, qso, submit} from '../../db/dataQuery.js';
+    import { fetchData, oars, submit} from '../../db/dataQuery.js';
     import { Button, Modal, Label, Input } from 'flowbite-svelte';
     import { Table, TableHead, TableHeadCell, TableBodyCell } from 'flowbite-svelte';
     import ListItem from '../../../components/ListItem.svelte';
 
     let info = ["oars", "", ""];
     let formModal = false;
-    let items = fetchData(qso, "oars");
+    let items = oars;
 
     function handleClick() {
         submit(info)

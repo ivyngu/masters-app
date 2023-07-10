@@ -1,5 +1,5 @@
 <script>
-    import { fetchData, qsc, submit, deleteItem } from '../../db/dataQuery.js';
+    import { fetchData, coxswains, submit, deleteItem } from '../../db/dataQuery.js';
     import { Button, Modal, Label, Input } from 'flowbite-svelte'
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     
@@ -7,7 +7,7 @@
 
     let info = ["coxswains", "", "", ""];
     
-    let items = fetchData(qsc);
+    let items = coxswains;
     function handleClick() {
         submit(info)
         formModal = false;
