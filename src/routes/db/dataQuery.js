@@ -20,10 +20,10 @@ const qso = await getDocs(qo);
 export let oars = fetchData(qso, "oars");
 const ql = query(collection(db, "lineups"));
 export const qsl = await getDocs(ql);
-export function fetchData(database, type) {
+export function fetchData(database, category) {
     let data = [];
     database.forEach((doc) => {
-        let item = { ...doc.data(), id: doc.id, db: type };
+        let item = { ...doc.data(), id: doc.id, category: category };
         data.push(item);
     });
     return data;
@@ -45,20 +45,20 @@ export async function submitLineUp(info, team) {
         console.log(e);
     }
 }
-function setInfo(info) {
-    return (info.length == 4) ? { name: info[1], age: info[2], weight: info[3] }
-        : (info.length == 3 && info[0] == "oars") ? { name: info[1], style: info[2] }
-            : { name: info[1], size: info[2] };
+function setInfo(category, info) {
+    return (category == "coxswains" || category == "rowers") ? { name: info[0], age: info[1], weight: info[2] }
+        : (category == "oars") ? { name: info[0], style: info[1] }
+            : { name: info[0], size: info[1] };
 }
 function resetInfo(info) {
-    for (let i = 1; i < info.length; i++) {
+    for (let i = 0; i < info.length; i++) {
         info[i] = "";
     }
     return info;
 }
-export async function submit(info) {
+export async function submit(category, info) {
     try {
-        const docRef = await addDoc(collection(db, info[0]), setInfo(info));
+        const docRef = await addDoc(collection(db, category), setInfo(category, info));
         console.log("Document written with ID: ", docRef.id);
         info = resetInfo(info);
     }
@@ -66,18 +66,18 @@ export async function submit(info) {
         console.log("nope");
     }
 }
-export async function deleteItem(type, id) {
+export async function deleteItem(category, id) {
     try {
-        await deleteDoc(doc(db, type, id));
+        await deleteDoc(doc(db, category, id));
         console.log("yay");
     }
     catch (e) {
         console.log(e);
     }
 }
-export async function saveItem(type, id, updated) {
+export async function saveItem(category, id, updated) {
     try {
-        await updateDoc(doc(db, type, id), updated);
+        await updateDoc(doc(db, category, id), updated);
         console.log("yay");
     }
     catch (e) {

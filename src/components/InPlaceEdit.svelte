@@ -27,6 +27,8 @@
         event.preventDefault()
         value = original
         editing = false
+      } else if (event.key == 'Enter') {
+        submit()
       }
     }
       

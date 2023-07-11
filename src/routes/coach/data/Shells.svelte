@@ -1,69 +1,16 @@
 <script>
-    import { fetchData, shells, submit, deleteItem } from '../../db/dataQuery.js';
-    import { Button, Modal, Label, Input } from 'flowbite-svelte'
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-    
-    let info = ["shells", "", ""];
-    let formModal = false;
-    let items = shells;
+    import { shells } from '../../db/dataQuery.js';
+    import AddItemModal from '../../../components/AddItemModal.svelte';
+    import TableView from '../../../components/TableView.svelte';
 
-    function handleClick() {
-        submit(info)
-        formModal = false;
-    }    
+    let formModal = false;
+    let info = ["", ""];
+    let items = shells;
+    let category = "shells";
+    let addLabel = "Add Shell";
+    let labels = ["Name", "Size"];
     
 </script>
 
-<Button on:click={() => formModal = true}>Add a Shell</Button>
-
-<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
-    <form class="flex flex-col space-y-6" action="#">
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add a Shell</h3>
-        <Label class="space-y-2">
-            <span>Name</span>
-            <Input type="text" id="name" name="name" bind:value={info[1]} required />
-        </Label>
-        <Label class="space-y-2">
-            <span>Size</span>
-            <Input type="text" id="age" name="age" bind:value={info[2]} required />
-        </Label>
-        <Button type="submit" class="w-full1" on:click={handleClick}>Submit</Button>
-    </form>
-</Modal>
-
-<Table hoverable={true}>
-    <TableHead>
-        <TableHeadCell>Name</TableHeadCell>
-        <TableHeadCell>Size</TableHeadCell>
-        <TableHeadCell>
-            <span class="sr-only"> Edit </span>
-        </TableHeadCell>
-    </TableHead>
-    <TableBody class="divide-y">
-        {#each items as item}
-        <TableBodyRow>
-            <TableBodyCell>{item.name}</TableBodyCell>
-            <TableBodyCell>{item.size}</TableBodyCell>
-            <TableBodyCell>
-                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                  Edit
-                </button>
-              </TableBodyCell>
-              <TableBodyCell>
-                <button class="font-medium text-primary-600 hover:underline dark:text-primary-500" on:click={() => deleteItem("shells", item.id)}>
-                  Delete
-                </button>
-              </TableBodyCell>
-        </TableBodyRow>
-        {/each}
-    </TableBody>
-</Table>
-
-
-
-
-
-
-
-
-
+<AddItemModal bind:formModal={formModal} bind:category={category} bind:addLabel={addLabel}  bind:labels={labels} bind:info={info}/>
+<TableView bind:category={category} bind:labels={labels} bind:items={items}/>
