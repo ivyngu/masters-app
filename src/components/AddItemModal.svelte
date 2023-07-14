@@ -1,5 +1,5 @@
 <script>
-    import { submit} from '../routes/db/dataQuery.js';
+    import { submit} from '../db/dataQuery.js';
     import { Button, Modal, Label, Input } from 'flowbite-svelte';
     
     export let formModal;

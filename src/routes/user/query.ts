@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "./../db/dbconfig.js";
+import { db } from "../../db/dbconfig.js";
 
 const qt = query(collection(db, "lineups"), where("day", "==", "Thursday"));
 

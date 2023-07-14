@@ -1,5 +1,5 @@
 <script>
-    import { shells } from '../../db/dataQuery.js';
+    import { shells } from '../../../db/dataQuery.js';
     import AddItemModal from '../../../components/AddItemModal.svelte';
     import TableView from '../../../components/TableView.svelte';
 

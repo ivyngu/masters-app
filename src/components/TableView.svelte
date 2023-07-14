@@ -1,17 +1,26 @@
 <script>
     import { Table, TableHead, TableHeadCell, TableBodyRow, TableBody } from 'flowbite-svelte';
     import ListItem from './ListItem.svelte';
-    
+    import ListPerson from './ListPerson.svelte';
+
     export let category;
     export let labels;
     export let items;
+
+    let person = false;
+    if (category == "oars" || category == "shells") {
+        person = false;
+    } else {
+        person = true;
+    }
 
 </script>
 
 <Table hoverable={true}>
     <TableHead>
-        <TableHeadCell>{labels[1]}</TableHeadCell>
-        <TableHeadCell>{labels[2]}</TableHeadCell>
+        {#each labels as label}
+        <TableHeadCell>{label}</TableHeadCell>
+        {/each}
         <TableHeadCell>
             <span class="sr-only">Edit</span>
         </TableHeadCell>
@@ -22,7 +31,11 @@
     <TableBody class="divide-y">
         {#each items as item}
         <TableBodyRow>
+            {#if person}
+            <ListPerson bind:category={category} {item}  />     
+            {:else}
             <ListItem bind:category={category} {item}  />     
+            {/if}
         </TableBodyRow>
     {/each}
 </TableBody>

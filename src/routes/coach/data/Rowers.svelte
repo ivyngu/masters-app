@@ -1,5 +1,5 @@
 <script>
-    import { rowers } from '../../db/dataQuery.js';
+    import { rowers } from '../../../db/dataQuery.js';
     import AddItemModal from '../../../components/AddItemModal.svelte';
     import TableView from '../../../components/TableView.svelte';
 

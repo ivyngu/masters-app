@@ -1,5 +1,5 @@
 <script>
-    import { coxswains } from '../../db/dataQuery.js';
+    import { coxswains } from '../../../db/dataQuery.js';
     import AddItemModal from '../../../components/AddItemModal.svelte';
     import TableView from '../../../components/TableView.svelte';
 

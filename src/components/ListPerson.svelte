@@ -1,5 +1,5 @@
 <script>
-    import { TableBodyCell, Select } from 'flowbite-svelte';
+    import { TableBodyCell } from 'flowbite-svelte';
     import { deleteItem, saveItem } from '../db/dataQuery.js';
     import InPlaceEdit from '/src/components/InPlaceEdit.svelte';
     import saveIcon from "./../images/save.png";
@@ -7,20 +7,13 @@
     import editIcon from "./../images/edit.png";
     import cancelIcon from "./../images/cancel.png";
 
+
     let editing = false;
     export let category;
     export let item;
     
-    let attributes;
-    if (category == "oars") {
-        attributes = [item.name, item.style];
-    } else if (category == "shells") {
-        attributes = [item.name, item.size];
-    }
-
-    let sizes = [1, 2, 4, 8]
-
-    let styles = ["Scull", "Sweep"]
+    let attributes = [item.name, item.age, item.weight];
+    
     
     function onCancel() {
         editing = false;                   
@@ -36,28 +29,11 @@
 
 {#if editing}
 
+{#each attributes as attribute}
 <TableBodyCell>
-    <InPlaceEdit bind:value={attributes[0]}/>	
+    <InPlaceEdit bind:value={attribute}/>	
 </TableBodyCell>
-<TableBodyCell>
-    {#if category == "shells"}
-    <Select bind:value={attributes[1]} placeholder="Choose">
-        {#each sizes as size}
-        <option value={size}>
-          {size}
-        </option>
-        {/each}
-      </Select>
-      {:else}
-      <Select bind:value={attributes[1]} placeholder="Choose">
-        {#each styles as style}
-        <option value={style}>
-          {style}
-        </option>
-        {/each}
-      </Select>
-      {/if}
-</TableBodyCell>
+{/each}
 
 <TableBodyCell>
     <button class="font-medium text-primary-600 hover:underline dark:text-primary-500" on:click={() => onSave(item)}> <img src={saveIcon} alt="Save"> </button>

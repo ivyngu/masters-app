@@ -1,5 +1,5 @@
 <script>
-    import { oars } from '../../db/dataQuery.js';
+    import { oars } from '../../../db/dataQuery.js';
     import AddItemModal from '../../../components/AddItemModal.svelte';
 	import TableView from '../../../components/TableView.svelte';
     
@@ -8,7 +8,7 @@
     let items = oars;
     let category = "oars";
     let addLabel = "Add Oar";
-    let labels = ["Add Oar", "Name", "Style"];
+    let labels = ["Name", "Style"];
 
 </script>
 
