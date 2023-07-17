@@ -30,6 +30,7 @@
     info[3] = selected[3].name;
     info[4] = selected[4].name;
     info[5] = selected[5].name;
+    info[6] = average;
     submitLineUp(info, setTeam());
     formModal = false;
     resetLineUp()

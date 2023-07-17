@@ -17,7 +17,6 @@ const qr = query(collection(db, "rowers"));
 export const qsr = await getDocs(qr);
 export let rowers = fetchData(qsr, "rowers");
 
-
 const qs = query(collection(db, "shells"));
 const qss = await getDocs(qs);
 export let shells = fetchData(qss, "shells");
@@ -26,11 +25,22 @@ const qo = query(collection(db, "oars"));
 const qso = await getDocs(qo);
 export let oars = fetchData(qso, "oars");
 
+const qt = query(collection(db, "lineups"), where("day", "==", "Thursday"));
+const qst = await getDocs(qt);
+export let Thursday = fetchData(qst, "lineups");
 
-const ql = query(collection(db, "lineups"));
-export const qsl = await getDocs(ql);
+const qf = query(collection(db, "lineups"), where("day", "==", "Friday"));
+const qsf = await getDocs(qf);
+export let Friday = fetchData(qsf, "lineups");
 
-  
+const qsa = query(collection(db, "lineups"), where("day", "==", "Saturday"));
+const qssa = await getDocs(qsa);
+export let Saturday = fetchData(qssa, "lineups");
+
+const qsu = query(collection(db, "lineups"), where("day", "==", "Sunday"));
+const qssu = await getDocs(qsu);
+export let Sunday = fetchData(qssu, "lineups");
+
 export function fetchData(database: QuerySnapshot<DocumentData>, category: string) {
     let data: any[] = [];
     database.forEach((doc) => {
