@@ -1,6 +1,6 @@
 
 <script>
-  import { coxswains, shells, oars, rowers, evtnames, evtnums, submitLineUp } from '../db/dataQuery.js';
+  import { coxswains, shells, oars, rowers, evts, submitLineUp } from '../db/dataQuery.js';
   import { Button, Modal, Label, Select } from 'flowbite-svelte'
   import { collection, query, getDocs, where } from "firebase/firestore";
   import { db } from "../db/dbconfig.js";
@@ -20,13 +20,14 @@
   let average = 0;
   let teamLabels = [];
   let teamSize = 0;
+  let evtname = "";
   
   // SUBMITTING TO FIREBASE
   function handleClick() {
     let info = Array(6);
     info[0] = selected[0].name;
-    info[1] = selected[1].name;
-    info[2] = selected[2].name;
+    info[1] = selected[1];
+    info[2] = selected[1].name;
     info[3] = selected[3].name;
     info[4] = selected[4].name;
     info[5] = selected[5].name;
@@ -79,6 +80,10 @@
     }
     average = (sum / numPPL);
   }
+
+  function getEvtName() {
+    evtname = selected[1].name;
+  }
   
 </script>
 
@@ -100,26 +105,18 @@
     
     <Label class="space-y-2">
       <span>Event Number</span>
-      <Select bind:value={selected[1]} placeholder="Choose">
-        {#each evtnums as evtnum}
-        <option value={evtnum}>
-          {evtnum.name}
+      <Select bind:value={selected[1]} on:change={getEvtName} placeholder="Choose">
+        {#each evts as evt}
+        <option value={evt}>
+          {evt.num}
         </option>
         {/each}
       </Select>
+     
     </Label>
-    
-    <Label class="space-y-2">
-      <span>Event Name</span>
-      <Select bind:value={selected[2]} placeholder="Choose">
-        {#each evtnames as evtname}
-        <option value={evtname}>
-          {evtname.name}
-        </option>
-        {/each}
-      </Select>
+    <Label>
+      <span> Event Name: {evtname}</span>
     </Label>
-    
     <Label class="space-y-2">
       <span>Coxswain</span>
       <Select bind:value={selected[3]} placeholder="Choose">

@@ -32,9 +32,9 @@
         {#each items as item}
         <TableBodyRow>
             {#if person}
-            <ListPerson bind:category={category} {item}  />     
+            <ListPerson {item}  />     
             {:else}
-            <ListItem bind:category={category} {item}  />     
+            <ListItem {item}  />     
             {/if}
         </TableBodyRow>
     {/each}

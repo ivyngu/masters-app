@@ -8,13 +8,12 @@
     import cancelIcon from "./../images/cancel.png";
 
     let editing = false;
-    export let category;
     export let item;
     
     let attributes;
-    if (category == "oars") {
+    if (item.category == "oars") {
         attributes = [item.name, item.style];
-    } else if (category == "shells") {
+    } else if (item.category == "shells") {
         attributes = [item.name, item.size];
     }
 
@@ -28,7 +27,7 @@
     
     function onSave(updatedItem) {
         item = {... updatedItem };
-        saveItem(updatedItem.db, updatedItem.id, item);
+        saveItem(updatedItem.category, updatedItem.id, item);
         editing = false;
     }
     
@@ -40,7 +39,7 @@
     <InPlaceEdit bind:value={attributes[0]}/>	
 </TableBodyCell>
 <TableBodyCell>
-    {#if category == "shells"}
+    {#if item.category == "shells"}
     <Select bind:value={attributes[1]} placeholder="Choose">
         {#each sizes as size}
         <option value={size}>

@@ -3,12 +3,9 @@ import { db } from "./dbconfig.js";
 const qc = query(collection(db, "coxswains"));
 const qsc = await getDocs(qc);
 export let coxswains = fetchData(qsc, "coxswains");
-const qevtname = query(collection(db, "evtname"));
-const qsevtname = await getDocs(qevtname);
-export let evtnames = fetchData(qsevtname, "evtname");
-const qevtnum = query(collection(db, "evtnum"));
-const qsevtnum = await getDocs(qevtnum);
-export let evtnums = fetchData(qsevtnum, "evtnum");
+const qevt = query(collection(db, "events"));
+const qsevt = await getDocs(qevt);
+export let evts = fetchData(qsevt, "events");
 const qr = query(collection(db, "rowers"));
 export const qsr = await getDocs(qr);
 export let rowers = fetchData(qsr, "rowers");
@@ -74,6 +71,20 @@ export async function submit(category, info) {
     }
     catch (e) {
         console.log("nope");
+    }
+}
+export async function submitEvent(info) {
+    try {
+        const docRef = await addDoc(collection(db, "events"), {
+            time: info[0],
+            num: info[1],
+            name: info[2],
+            lane: info[3]
+        });
+        console.log("Document written with ID: ", docRef.id);
+    }
+    catch (e) {
+        console.log(e);
     }
 }
 export async function deleteItem(category, id) {

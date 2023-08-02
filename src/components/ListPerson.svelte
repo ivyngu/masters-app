@@ -9,7 +9,6 @@
 
 
     let editing = false;
-    export let category;
     export let item;
     
     let attributes = [item.name, item.age, item.weight];
@@ -21,7 +20,7 @@
     
     function onSave(updatedItem) {
         item = {... updatedItem };
-        saveItem(updatedItem.db, updatedItem.id, item);
+        saveItem(updatedItem.category, updatedItem.id, item);
         editing = false;
     }
     
