@@ -1,4 +1,4 @@
-import { collection, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, updateDoc, where } from "firebase/firestore";
+import { collection, or, query, getDocs, addDoc, QuerySnapshot, deleteDoc, doc, updateDoc, where } from "firebase/firestore";
 import { db } from "./dbconfig.js";
 const qc = query(collection(db, "coxswains"));
 const qsc = await getDocs(qc);
@@ -15,18 +15,23 @@ export let shells = fetchData(qss, "shells");
 const qo = query(collection(db, "oars"));
 const qso = await getDocs(qo);
 export let oars = fetchData(qso, "oars");
-const qt = query(collection(db, "lineups"), where("day", "==", "Thursday"));
+const qt = query(collection(db, 'lineups'), where('day', '==', 'Thu'));
 const qst = await getDocs(qt);
 export let Thursday = fetchData(qst, "lineups");
-const qf = query(collection(db, "lineups"), where("day", "==", "Friday"));
+const qf = query(collection(db, "lineups"), where("day", "==", "Fri"));
 const qsf = await getDocs(qf);
 export let Friday = fetchData(qsf, "lineups");
 const qsa = query(collection(db, "lineups"), where("day", "==", "Saturday"));
 const qssa = await getDocs(qsa);
 export let Saturday = fetchData(qssa, "lineups");
-const qsu = query(collection(db, "lineups"), where("day", "==", "Sunday"));
+const qsu = query(collection(db, 'lineups'), where('day', '==', 'Sun'));
 const qssu = await getDocs(qsu);
 export let Sunday = fetchData(qssu, "lineups");
+export async function findPerson(name) {
+    const pq = query(collection(db, 'lineups'), or(where('team', 'array-contains', name), where('cox', '==', name)));
+    const pqs = await getDocs(pq);
+    return fetchData(pqs, "lineups");
+}
 export function fetchData(database, category) {
     let data = [];
     database.forEach((doc) => {
@@ -39,11 +44,15 @@ export async function submitLineUp(info, team) {
     try {
         const docRef = await addDoc(collection(db, "lineups"), {
             day: info[0],
-            evtnum: info[1],
-            evtname: info[2],
-            oar: info[3],
-            shell: info[4],
-            cox: info[5],
+            evtid: info[1],
+            lane: info[2],
+            name: info[3],
+            num: info[4],
+            time: info[5],
+            shell: info[6],
+            oar: info[7],
+            cox: info[8],
+            average: info[9],
             team: team
         });
         console.log("Document written with ID: ", docRef.id);
@@ -76,10 +85,11 @@ export async function submit(category, info) {
 export async function submitEvent(info) {
     try {
         const docRef = await addDoc(collection(db, "events"), {
-            time: info[0],
-            num: info[1],
-            name: info[2],
-            lane: info[3]
+            day: info[0],
+            time: info[1],
+            num: info[2],
+            name: info[3],
+            lane: info[4]
         });
         console.log("Document written with ID: ", docRef.id);
     }

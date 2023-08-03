@@ -5,14 +5,7 @@
   import { collection, query, getDocs, where } from "firebase/firestore";
   import { db } from "../db/dbconfig.js";
   
-  let days = [
-  {value:"Thursday", name: "Thursday"},
-  {value:"Friday", name: "Friday"},
-  {value:"Saturday", name: "Saturday"},
-  {value:"Sunday", name: "Sunday"}
-  ]
-  
-  // day, evtnum, evtname, oar, cox, shell
+  // evt, shell, oar, cox
   let selected = [];
   let selectedTeam = [];
   
@@ -24,14 +17,17 @@
   
   // SUBMITTING TO FIREBASE
   function handleClick() {
-    let info = Array(6);
-    info[0] = selected[0].name;
-    info[1] = selected[1];
-    info[2] = selected[1].name;
-    info[3] = selected[3].name;
-    info[4] = selected[4].name;
-    info[5] = selected[5].name;
-    info[6] = average;
+    let info = Array(10);
+    info[0] = selected[0].day; // day
+    info[1] = selected[0].id; // id
+    info[2] = selected[0].lane; // lane
+    info[3] = selected[0].name; // name
+    info[4] = selected[0].num; // num
+    info[5] = selected[0].time; // time
+    info[6] = selected[1].name; // shell
+    info[7] = selected[2].name; // oar
+    info[8] = selected[3].name; // cox
+    info[9] = average; // avg wt
     submitLineUp(info, setTeam());
     formModal = false;
     resetLineUp()
@@ -82,7 +78,7 @@
   }
 
   function getEvtName() {
-    evtname = selected[1].name;
+    evtname = selected[0].name;
   }
   
 </script>
@@ -93,19 +89,8 @@
   <form class="flex flex-col space-y-6" action="#">
     
     <Label class="space-y-2">
-      <span>Day</span>
-      <Select bind:value={selected[0]} placeholder="Choose">
-        {#each days as day}
-        <option value={day}>
-          {day.name}
-        </option>
-        {/each}
-      </Select>
-    </Label>
-    
-    <Label class="space-y-2">
       <span>Event Number</span>
-      <Select bind:value={selected[1]} on:change={getEvtName} placeholder="Choose">
+      <Select bind:value={selected[0]} on:change={getEvtName} placeholder="Choose">
         {#each evts as evt}
         <option value={evt}>
           {evt.num}
@@ -117,20 +102,21 @@
     <Label>
       <span> Event Name: {evtname}</span>
     </Label>
+    
     <Label class="space-y-2">
-      <span>Coxswain</span>
-      <Select bind:value={selected[3]} placeholder="Choose">
-        {#each coxswains as cox}
-        <option value={cox}>
-          {cox.name}
+      <span>Shell</span>
+      <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+        {#each shells as shell}
+        <option value={shell}>
+          {shell.name}
         </option>
         {/each}
       </Select>
     </Label>
-    
+
     <Label class="space-y-2">
       <span>Oar</span>
-      <Select bind:value={selected[4]} placeholder="Choose">
+      <Select bind:value={selected[2]} placeholder="Choose">
         {#each oars as oar}
         <option value={oar}>
           {oar.name}
@@ -139,12 +125,13 @@
       </Select>
     </Label>
     
+    
     <Label class="space-y-2">
-      <span>Shell</span>
-      <Select bind:value={selected[5]} on:change={() => readShellSize(selected[5].name)} placeholder="Choose">
-        {#each shells as shell}
-        <option value={shell}>
-          {shell.name}
+      <span>Coxswain</span>
+      <Select bind:value={selected[3]} placeholder="Choose">
+        {#each coxswains as cox}
+        <option value={cox}>
+          {cox.name}
         </option>
         {/each}
       </Select>

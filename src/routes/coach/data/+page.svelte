@@ -4,6 +4,7 @@
 	import Coxswains from "./Coxswains.svelte";
 	import Oars from "./Oars.svelte";
 	import Shells from "./Shells.svelte";
+	import CoachNavBar from "../../../components/CoachNavBar.svelte";
 	
 	let items = [
 	{ label: "Rowers",
@@ -25,4 +26,5 @@
 	];
 </script>
 
+<CoachNavBar></CoachNavBar>
 <Tabs {items} />

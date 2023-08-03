@@ -1,4 +1,7 @@
 <script>
+  // component used to combine in place editing with buttons so the enter key saves to db as well
+  // has yet to be completed
+
   import { createEventDispatcher, onMount } from 'svelte'
 
   export let value, required = true, hitEnter = false

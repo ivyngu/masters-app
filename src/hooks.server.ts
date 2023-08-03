@@ -2,6 +2,7 @@
 On startup of the website, this script will run & scrap HereNow event data to set up our own Firebase database.
 */
 
+/*
 import playwright from 'playwright'
 import { submitEvent } from './db/dataQuery.js'
 
@@ -60,7 +61,8 @@ async function search(page: { locator: (arg0: string, arg1: { hasText: string; }
     for (let i = 0; i < rfCount; i++) {
         let curr = rf.nth(i);
         const code = await curr.locator("td > span.flightCode").innerText();
-        const time = await curr.locator("td > span.flightTime").innerText();
+        const timeTemp = await curr.locator("td > span.flightTime").innerText();
+        const time = timeTemp.split(" ");
         const name = await curr.locator("td > span.flightName").innerText();
         
         const lanes = [];
@@ -77,9 +79,9 @@ async function search(page: { locator: (arg0: string, arg1: { hasText: string; }
         
         for (let i = 0; i < lanes.length; i++) {
             const lane = lanes[i];
-            data.push([ time, code, name, lane ]);
+            data.push([ time[0], time[1], code, name, lane ]);
         }
         
     }
     return data;
-}
+}*/
