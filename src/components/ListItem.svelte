@@ -1,3 +1,5 @@
+<!-- Coach Admin: Single component that comprises of shell/oar on tableview. -->
+
 <script>
     import { TableBodyCell, Select } from 'flowbite-svelte';
     import { deleteItem, saveItem } from '../db/dataQuery.js';

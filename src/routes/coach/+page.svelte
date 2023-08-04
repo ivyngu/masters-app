@@ -7,7 +7,7 @@
     
     function handleClick() {
         if (value === "Rowing!") {
-            goto('/coach/data')
+            goto('/coach/lineup')
         } else {
             msg = "Wrong password. Please try again."
         }

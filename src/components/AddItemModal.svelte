@@ -1,3 +1,4 @@
+<!-- Coach Admin: Component for adding data (i.e. shells, oars, cox, rowers) -->
 <script>
     import { submit} from '../db/dataQuery.js';
     import { Button, Modal, Label, Input } from 'flowbite-svelte';

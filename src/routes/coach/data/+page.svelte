@@ -1,30 +1,57 @@
-<script>
-	import Tabs from "../../../components/Tabs.svelte";
-	import Rowers from "./Rowers.svelte";
-	import Coxswains from "./Coxswains.svelte";
-	import Oars from "./Oars.svelte";
-	import Shells from "./Shells.svelte";
-	import CoachNavBar from "../../../components/CoachNavBar.svelte";
+ <script>
+	import { Tabs, TabItem } from 'flowbite-svelte';
+	import { coxswains, rowers, shells, oars } from '../../../db/dataQuery.js';
+	import AddItemModal from '../../../components/AddItemModal.svelte';
+	import TableView from '../../../components/TableView.svelte';
+	import CoachNavBar from '../../../components/CoachNavBar.svelte';
 	
-	let items = [
-	{ label: "Rowers",
-	value: 1,
-	component: Rowers
-	},
-	{ label: "Coxswains",
-	value: 2,
-	component: Coxswains
-	},
-	{ label: "Shells",
-	value: 3,
-	component: Shells
-	},
-	{ label: "Oars",
-	value: 4,
-	component: Oars
-	}
-	];
-</script>
+	let rowerModal = false;
+	let rowerInfo = ["", "", ""];
+	let rowerItems = rowers;
+	let rowerCategory = "rowers";
+	let rowerAddLabel = "Add Rower";
+	let rowerLabels = ["Name", "Age", "Weight"];
 
+	let coxModal = false;
+	let coxInfo = ["", "", ""];
+	let coxItems = coxswains;
+	let coxCategory = "coxswains";
+	let coxAddLabel = "Add Coxswain";
+	let coxLabels = ["Name", "Age", "Weight"];
+	
+	let oarModal = false;
+	let oarInfo = ["", ""];
+	let oarItems = oars;
+	let oarCategory = "oars";
+	let oarAddLabel = "Add Oar";
+	let oarLabels = ["Name", "Style"];
+		
+	let shellModal = false;
+	let shellInfo = ["", ""];
+	let shellItems = shells;
+	let shellCategory = "shells";
+	let shellAddLabel = "Add Shell";
+	let shellLabels = ["Name", "Size"];
+	
+	
+</script>
 <CoachNavBar></CoachNavBar>
-<Tabs {items} />
+
+<Tabs style="underline">
+	<TabItem title="Rowers">
+		<AddItemModal bind:formModal={rowerModal} bind:category={rowerCategory} bind:addLabel={rowerAddLabel}  bind:labels={rowerLabels} bind:info={rowerInfo}/>
+		<TableView bind:category={rowerCategory} bind:labels={rowerLabels} bind:items={rowerItems}/>  
+	</TabItem>
+	<TabItem open title="Coxswains">
+		<AddItemModal bind:formModal={coxModal} bind:category={coxCategory} bind:addLabel={coxAddLabel}  bind:labels={coxLabels} bind:info={coxInfo}/>
+		<TableView bind:category={coxCategory} bind:labels={coxLabels} bind:items={coxItems}/>    
+	</TabItem>
+	<TabItem title="Oars">
+		<AddItemModal bind:formModal={oarModal} bind:category={oarCategory} bind:addLabel={oarAddLabel}  bind:labels={oarLabels} bind:info={oarInfo}/>
+		<TableView bind:category={oarCategory} bind:labels={oarLabels} bind:items={oarItems}/>  
+	</TabItem>
+	<TabItem title="Shells">
+		<AddItemModal bind:formModal={shellModal} bind:category={shellCategory} bind:addLabel={shellAddLabel}  bind:labels={shellLabels} bind:info={shellInfo}/>
+		<TableView bind:category={shellCategory} bind:labels={shellLabels} bind:items={shellItems}/>
+	</TabItem>
+</Tabs>

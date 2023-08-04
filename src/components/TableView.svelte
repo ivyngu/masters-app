@@ -1,3 +1,5 @@
+<!-- Coach Admin: Tableview of current data (oars, shells, rowers, coxs) -->
+
 <script>
     import { Table, TableHead, TableHeadCell, TableBodyRow, TableBody } from 'flowbite-svelte';
     import ListItem from './ListItem.svelte';

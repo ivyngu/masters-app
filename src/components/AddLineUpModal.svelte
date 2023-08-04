@@ -1,4 +1,4 @@
-
+<!-- Coach Admin: Component for adding lineups -->
 <script>
   import { coxswains, shells, oars, rowers, evts, submitLineUp } from '../db/dataQuery.js';
   import { Button, Modal, Label, Select } from 'flowbite-svelte'

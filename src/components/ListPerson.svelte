@@ -1,3 +1,5 @@
+<!-- Coach Admin: Single component that comprises of cox/rower on tableview. -->
+
 <script>
     import { TableBodyCell } from 'flowbite-svelte';
     import { deleteItem, saveItem } from '../db/dataQuery.js';

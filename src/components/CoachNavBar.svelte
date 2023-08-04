@@ -1,3 +1,5 @@
+<!-- Coach Admin -->
+
 <script>
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte'
     import rriLogo from "./../images/rri.png";
@@ -17,8 +19,8 @@
     </NavBrand>
     <NavHamburger on:click={toggle} />
     <NavUl {hidden}>
-        <NavLi href="/" active={true}>Home</NavLi>
-        <NavLi href="/data">Data Input</NavLi>
-        <NavLi href="/lineup">Lineups</NavLi>
+        <NavLi href="lineup">Lineups</NavLi>
+        <NavLi href="data">Data Input</NavLi>
+        <NavLi href="/" active={true}>Back to User Home</NavLi>
     </NavUl>
 </Navbar>

@@ -1,3 +1,5 @@
+<!-- Coach Admin: Select options list for editing current data inputs (shells/oars) -->
+
 <script>
     import { Label, Select } from 'flowbite-svelte'
 

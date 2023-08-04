@@ -1,3 +1,5 @@
+<!-- User: Cards for viewing events -->
+
 <script>
     import { Card } from "flowbite-svelte";
     export let evt;
