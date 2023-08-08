@@ -14,14 +14,16 @@
     
     let attributes;
     if (item.category == "oars") {
-        attributes = [item.name, item.style];
+        attributes = [item.name, item.style, item.type];
     } else if (item.category == "shells") {
-        attributes = [item.name, item.size];
+        attributes = [item.name, item.size, item.type];
     }
 
     let sizes = [1, 2, 4, 8]
 
     let styles = ["Scull", "Sweep"]
+
+    let types = ["x/-", "+", "x", "+/-"]
     
     function onCancel() {
         editing = false;                   
@@ -58,6 +60,15 @@
         {/each}
       </Select>
       {/if}
+</TableBodyCell>
+<TableBodyCell>
+    <Select bind:value={attributes[2]} placeholder="Choose">
+        {#each types as type}
+        <option value={type}>
+          {type}
+        </option>
+        {/each}
+      </Select>
 </TableBodyCell>
 
 <TableBodyCell>

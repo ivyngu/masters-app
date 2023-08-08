@@ -4,7 +4,9 @@
 	import AddItemModal from '../../../components/AddItemModal.svelte';
 	import TableView from '../../../components/TableView.svelte';
 	import CoachNavBar from '../../../components/CoachNavBar.svelte';
-	
+	import AddPersonModal from '../../../components/AddPersonModal.svelte';
+	import EventTable from '../../../components/EventTable.svelte';
+
 	let rowerModal = false;
 	let rowerInfo = ["", "", ""];
 	let rowerItems = rowers;
@@ -20,30 +22,33 @@
 	let coxLabels = ["Name", "Age", "Weight"];
 	
 	let oarModal = false;
-	let oarInfo = ["", ""];
+	let oarInfo = ["", "", ""];
 	let oarItems = oars;
 	let oarCategory = "oars";
 	let oarAddLabel = "Add Oar";
-	let oarLabels = ["Name", "Style"];
+	let oarLabels = ["Name", "Style", "Type"];
 		
 	let shellModal = false;
-	let shellInfo = ["", ""];
+	let shellInfo = ["", "", ""];
 	let shellItems = shells;
 	let shellCategory = "shells";
 	let shellAddLabel = "Add Shell";
-	let shellLabels = ["Name", "Size"];
+	let shellLabels = ["Name", "Size", "Type"];
 	
 	
 </script>
 <CoachNavBar></CoachNavBar>
 
 <Tabs style="underline">
+	<TabItem title="Events">
+		<EventTable></EventTable>
+	</TabItem>
 	<TabItem title="Rowers">
-		<AddItemModal bind:formModal={rowerModal} bind:category={rowerCategory} bind:addLabel={rowerAddLabel}  bind:labels={rowerLabels} bind:info={rowerInfo}/>
+		<AddPersonModal bind:formModal={rowerModal} bind:category={rowerCategory} bind:addLabel={rowerAddLabel}  bind:labels={rowerLabels} bind:info={rowerInfo}/>
 		<TableView bind:category={rowerCategory} bind:labels={rowerLabels} bind:items={rowerItems}/>  
 	</TabItem>
 	<TabItem open title="Coxswains">
-		<AddItemModal bind:formModal={coxModal} bind:category={coxCategory} bind:addLabel={coxAddLabel}  bind:labels={coxLabels} bind:info={coxInfo}/>
+		<AddPersonModal bind:formModal={coxModal} bind:category={coxCategory} bind:addLabel={coxAddLabel}  bind:labels={coxLabels} bind:info={coxInfo}/>
 		<TableView bind:category={coxCategory} bind:labels={coxLabels} bind:items={coxItems}/>    
 	</TabItem>
 	<TabItem title="Oars">

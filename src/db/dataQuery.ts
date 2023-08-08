@@ -1,42 +1,45 @@
 import { collection, or, query, getDocs, addDoc, QuerySnapshot, type DocumentData, deleteDoc, doc, updateDoc, where } from "firebase/firestore";
 import { db } from "./dbconfig.js";
 
-const qc = query(collection(db, "coxswains"));
-const qsc = await getDocs(qc);
-export let coxswains = fetchData(qsc, "coxswains");
 
-const qevt = query(collection(db, "events"));
-const qsevt = await getDocs(qevt);
+const qsevt = await getDocs(query(collection(db, "events")));
 export let evts = fetchData(qsevt, "events");
 
-const qr = query(collection(db, "rowers"));
-export const qsr = await getDocs(qr);
+const qsc = await getDocs(query(collection(db, "coxswains")));
+export let coxswains = fetchData(qsc, "coxswains");
+const qsr = await getDocs(query(collection(db, "rowers")));
 export let rowers = fetchData(qsr, "rowers");
 
-const qs = query(collection(db, "shells"));
-const qss = await getDocs(qs);
+const qss = await getDocs(query(collection(db, "shells")));
 export let shells = fetchData(qss, "shells");
+// -/x shells
+const qs1x = await getDocs(query(collection(db, 'shells'), where('type', '==', 'x'), where('size', '==', '1')));
+export let singleShells = fetchData(qs1x, "shells");
+const qs2 = await getDocs(query(collection(db, 'shells'), (where('type', '==', 'x/-'), where('size', '==', '2'))));
+export let twoShells = fetchData(qs2, "shells");
+const qs4 = await getDocs(query(collection(db, 'shells'), (where('type', '==', 'x/-'), where('size', '==', '4'))));
+export let fourShells = fetchData(qs4, "shells");
+// + shells
+const qs4p = await getDocs(query(collection(db, 'shells'), (where('type', '==', '+'), where('size', '==', '4'))));
+export let fourPShells = fetchData(qs4p, "shells");
+const qs8p = await getDocs(query(collection(db, 'shells'), (where('type', '==', '+'), where('size', '==', '8'))));
+export let eightPShells = fetchData(qs8p, "shells");
 
-const qo = query(collection(db, "oars"));
-const qso = await getDocs(qo);
+const qso = await getDocs(query(collection(db, "oars")));
 export let oars = fetchData(qso, "oars");
+const qox = await getDocs(query(collection(db, 'oars'), where('type', '==', 'x')));
+export let xOars = fetchData(qox, "oars");
+const qopm = await getDocs(query(collection(db, 'oars'), where('type', '==', '+/-')));
+export let pmOars = fetchData(qopm, "oars");
 
-const qt = query(collection(db, 'lineups'), where('day', '==', 'Thu'));
-const qst = await getDocs(qt);
+const qst = await getDocs(query(collection(db, 'lineups'), where('day', '==', 'Thu')));
 export let Thursday = fetchData(qst, "lineups");
-
-const qf = query(collection(db, "lineups"), where("day", "==", "Fri"));
-const qsf = await getDocs(qf);
-
+const qsf = await getDocs(query(collection(db, "lineups"), where("day", "==", "Fri")));
 export let Friday = fetchData(qsf, "lineups");
-
-const qsa = query(collection(db, "lineups"), where("day", "==", "Saturday"));
-const qssa = await getDocs(qsa);
-export let Saturday = fetchData(qssa, "lineups");
-
-const qsu = query(collection(db, 'lineups'), where('day', '==', 'Sun'));
-const qssu = await getDocs(qsu);
-export let Sunday = fetchData(qssu, "lineups");
+const qsa = await getDocs(query(collection(db, "lineups"), where("day", "==", "Saturday")));
+export let Saturday = fetchData(qsa, "lineups");
+const qsu = await getDocs(query(collection(db, 'lineups'), where('day', '==', 'Sun')));
+export let Sunday = fetchData(qsu, "lineups");
 
 export async function findPerson(name: string) {
     const pq = query(collection(db, 'lineups'), or(where('team', 'array-contains', name),
@@ -78,8 +81,8 @@ export async function submitLineUp(info: Object[], team: Object[]) {
 
 function setInfo(category: string, info: string[]) {
     return (category == "coxswains" || category == "rowers") ? {name: info[0], age: info[1],weight: info[2]} 
-    : (category == "oars") ? {name: info[0], style: info[1]} 
-    : {name: info[0], size: info[1]};
+    : (category == "oars") ? {name: info[0], style: info[1], type: info[2]} 
+    : {name: info[0], size: info[1], type: info[2]};
 }
 
 function resetInfo(info: string[]) {

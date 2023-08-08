@@ -1,20 +1,36 @@
 <!-- Coach Admin: Component for adding lineups -->
 <script>
-  import { coxswains, shells, oars, rowers, evts, submitLineUp } from '../db/dataQuery.js';
+  import { coxswains, singleShells, twoShells, fourPShells, fourShells, eightPShells, xOars, pmOars, rowers, evts, submitLineUp } from '../db/dataQuery.js';
   import { Button, Modal, Label, Select } from 'flowbite-svelte'
   import { collection, query, getDocs, where } from "firebase/firestore";
   import { db } from "../db/dbconfig.js";
   
   // evt, shell, oar, cox
-  let selected = [];
-  let selectedTeam = [];
+  let selected = [], selectedTeam = [], teamLabels = [];
   
   let formModal = false;
-  let average = 0;
-  let teamLabels = [];
-  let teamSize = 0;
-  let evtname = "";
+  let avgWt = 0, avgAge = 0, teamSize = 0;
+  let ageClass = "", evtname = "";
+
+  let selectSingleS = false, selectTwoS = false, selectFourS = false, selectFourPS = false, selectEightPS = false, selectXOar = false, selectPMOar = false;
   
+  function findEventDetails() {
+    if (evtname.includes("2x") || evtname.includes("2-")) {
+      selectTwoS = true;
+    } else if (evtname.includes("4x") || evtname.includes("4-")) {
+      selectFourS = true;
+    } else if (evtname.includes("1x")) {
+      selectSingleS = true;
+      selectXOar = true;
+  } else if (evtname.includes("4+")) {
+    selectFourPS = true;
+    selectPMOar = true;
+  } else if (evtname.includes("8+")) {
+    selectEightPS = true;
+    selectPMOar = true;
+  }
+}
+
   // SUBMITTING TO FIREBASE
   function handleClick() {
     let info = Array(10);
@@ -74,11 +90,54 @@
         sum += parseInt(selectedTeam[i].weight);
       }
     }
-    average = (sum / numPPL);
+    avgWt = (sum / numPPL);
+  }
+
+  // TEAM AVERAGE AGE DISPLAY
+  function calculateAvgAge() {
+    let numPPL = 0;
+    let sum = 0;
+    for (let i = 0; i < selectedTeam.length; i++) {
+      if (selectedTeam[i] != "") {
+        numPPL += 1;
+        sum += parseInt(selectedTeam[i].age);
+      }
+    }
+    avgAge = (sum / numPPL);
+    calculateAgeClass();
+  }
+
+  function calculateAgeClass() {
+    if (avgAge > 84) {
+      ageClass = "K"; 
+    } else if (avgAge > 79) {
+      ageClass = "J";
+    } else if (avgAge > 74) {
+      ageClass = "I"
+    } else if (avgAge > 69) {
+      ageClass = "H"
+    } else if (avgAge > 64) {
+      ageClass = "G"
+    } else if (avgAge > 59) {
+      ageClass = "F"
+    } else if (avgAge > 54) {
+      ageClass = "E"
+    } else if (avgAge > 49) {
+      ageClass = "D"
+    } else if (avgAge > 42) {
+      ageClass = "C"
+    } else if (avgAge > 35) {
+      ageClass = "B"
+    } else if (avgAge > 26) {
+      ageClass = "A"
+    } else {
+      ageClass = "AA"
+    }
   }
 
   function getEvtName() {
     evtname = selected[0].name;
+    findEventDetails()
   }
   
 </script>
@@ -105,24 +164,73 @@
     
     <Label class="space-y-2">
       <span>Shell</span>
+      {#if selectSingleS}
       <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
-        {#each shells as shell}
+        {#each singleShells as shell}
         <option value={shell}>
           {shell.name}
         </option>
         {/each}
       </Select>
+
+        {:else if selectTwoS}
+        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+          {#each twoShells as shell}
+          <option value={shell}>
+            {shell.name}
+          </option>
+          {/each}
+        </Select>
+
+        {:else if selectFourS}
+        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+          {#each fourShells as shell}
+          <option value={shell}>
+            {shell.name}
+          </option>
+          {/each}
+        </Select>
+
+        {:else if selectFourPS}
+        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+          {#each fourPShells as shell}
+          <option value={shell}>
+            {shell.name}
+          </option>
+          {/each}
+        </Select>
+
+        {:else if selectEightPS}
+        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+          {#each eightPShells as shell}
+          <option value={shell}>
+            {shell.name}
+          </option>
+          {/each}
+        </Select>
+
+        {/if}        
     </Label>
 
     <Label class="space-y-2">
       <span>Oar</span>
+      {#if selectPMOar}
       <Select bind:value={selected[2]} placeholder="Choose">
-        {#each oars as oar}
+        {#each pmOars as oar}
         <option value={oar}>
           {oar.name}
         </option>
         {/each}
       </Select>
+        {:else if selectXOar}
+        <Select bind:value={selected[2]} placeholder="Choose">
+          {#each xOars as oar}
+          <option value={oar}>
+            {oar.name}
+          </option>
+          {/each}
+          </Select>
+        {/if}        
     </Label>
     
     
@@ -139,7 +247,7 @@
     
     {#each teamLabels as teamLabel, i}
     <Label class="space-y-2">{teamLabel.label}
-      <Select bind:value={selectedTeam[i]} on:change={calculateAvgWt} placeholder="Choose">
+      <Select bind:value={selectedTeam[i]} on:change={calculateAvgWt} on:change={calculateAvgAge} placeholder="Choose">
         {#each rowers as rower}
         <option value={rower}>
           {rower.name}
@@ -149,7 +257,7 @@
     </Label>
     {/each}
     
-    <span>Average Weight: {average}</span>
+    <span>Avg Wt: {avgWt} Avg Age: {avgAge} Class: {ageClass}</span>
   </form>
   
   <Button type="submit" class="w-full1" on:click={handleClick}>Submit</Button>
