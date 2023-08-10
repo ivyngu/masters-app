@@ -8,22 +8,22 @@
     import deleteIcon from "./../images/delete.png";
     import editIcon from "./../images/edit.png";
     import cancelIcon from "./../images/cancel.png";
-
+    
     let editing = false;
     export let item;
     
     let attributes;
     if (item.category == "oars") {
-        attributes = [item.name, item.style, item.type];
+        attributes = [item.name, item.style];
     } else if (item.category == "shells") {
         attributes = [item.name, item.size, item.type];
     }
-
+    
     let sizes = [1, 2, 4, 8]
-
+    
     let styles = ["Scull", "Sweep"]
-
-    let types = ["x/-", "+", "x", "+/-"]
+    
+    let types = ["x/-", "+", "x"]
     
     function onCancel() {
         editing = false;                   
@@ -47,29 +47,30 @@
     <Select bind:value={attributes[1]} placeholder="Choose">
         {#each sizes as size}
         <option value={size}>
-          {size}
+            {size}
         </option>
         {/each}
-      </Select>
-      {:else}
-      <Select bind:value={attributes[1]} placeholder="Choose">
+    </Select>
+    <TableBodyCell>
+        <Select bind:value={attributes[2]} placeholder="Choose">
+            {#each types as type}
+            <option value={type}>
+                {type}
+            </option>
+            {/each}
+        </Select>
+    </TableBodyCell>
+    {:else}
+    <Select bind:value={attributes[1]} placeholder="Choose">
         {#each styles as style}
         <option value={style}>
-          {style}
+            {style}
         </option>
         {/each}
-      </Select>
-      {/if}
+    </Select>
+    {/if}
 </TableBodyCell>
-<TableBodyCell>
-    <Select bind:value={attributes[2]} placeholder="Choose">
-        {#each types as type}
-        <option value={type}>
-          {type}
-        </option>
-        {/each}
-      </Select>
-</TableBodyCell>
+
 
 <TableBodyCell>
     <button class="font-medium text-primary-600 hover:underline dark:text-primary-500" on:click={() => onSave(item)}> <img src={saveIcon} alt="Save"> </button>

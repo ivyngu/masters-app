@@ -8,24 +8,24 @@ const qsr = await getDocs(query(collection(db, "rowers")));
 export let rowers = fetchData(qsr, "rowers");
 const qss = await getDocs(query(collection(db, "shells")));
 export let shells = fetchData(qss, "shells");
-// -/x shells
-const qs1x = await getDocs(query(collection(db, 'shells'), and(where('type', '==', 'x'), where('size', '==', '1'))));
+// x/- shells
+const qs1x = await getDocs(query(collection(db, 'shells'), where('type', '==', 'x'), where('size', '==', 1)));
 export let singleShells = fetchData(qs1x, "shells");
-const qs2 = await getDocs(query(collection(db, 'shells'), and(where('type', '==', 'x/-'), where('size', '==', '2'))));
+const qs2 = await getDocs(query(collection(db, 'shells'), where('type', '==', 'x/-'), where('size', '==', 2)));
 export let twoShells = fetchData(qs2, "shells");
-const qs4 = await getDocs(query(collection(db, 'shells'), and(where('type', '==', 'x/-'), where('size', '==', '4'))));
+const qs4 = await getDocs(query(collection(db, 'shells'), where('type', '==', 'x/-'), where('size', '==', 4)));
 export let fourShells = fetchData(qs4, "shells");
 // + shells
-const qs4p = await getDocs(query(collection(db, 'shells'), and(where('type', '==', '+'), where('size', '==', '4'))));
+const qs4p = await getDocs(query(collection(db, 'shells'), where('type', '==', '+'), where('size', '==', 4)));
 export let fourPShells = fetchData(qs4p, "shells");
-const qs8p = await getDocs(query(collection(db, 'shells'), and(where('type', '==', '+'), where('size', '==', '8'))));
+const qs8p = await getDocs(query(collection(db, 'shells'), where('type', '==', '+'), where('size', '==', 8)));
 export let eightPShells = fetchData(qs8p, "shells");
 const qso = await getDocs(query(collection(db, "oars")));
 export let oars = fetchData(qso, "oars");
-const qox = await getDocs(query(collection(db, 'oars'), where('type', '==', 'x')));
-export let xOars = fetchData(qox, "oars");
-const qopm = await getDocs(query(collection(db, 'oars'), where('type', '==', '+/-')));
-export let pmOars = fetchData(qopm, "oars");
+const qox = await getDocs(query(collection(db, 'oars'), where('style', '==', 'Scull')));
+export let scullOars = fetchData(qox, "oars");
+const qopm = await getDocs(query(collection(db, 'oars'), where('style', '==', 'Sweep')));
+export let sweepOars = fetchData(qopm, "oars");
 const qst = await getDocs(query(collection(db, 'lineups'), where('day', '==', 'Thu')));
 export let Thursday = fetchData(qst, "lineups");
 const qsf = await getDocs(query(collection(db, "lineups"), where("day", "==", "Fri")));

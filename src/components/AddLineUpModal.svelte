@@ -1,6 +1,6 @@
 <!-- Coach Admin: Component for adding lineups -->
 <script>
-  import { coxswains, singleShells, twoShells, fourPShells, fourShells, eightPShells, xOars, pmOars, rowers, evts, submitLineUp } from '../db/dataQuery.js';
+  import { coxswains, singleShells, twoShells, fourPShells, fourShells, eightPShells, scullOars, sweepOars, rowers, evts, submitLineUp, oars } from '../db/dataQuery.js';
   import { Button, Modal, Label, Select } from 'flowbite-svelte'
   import { collection, query, getDocs, where } from "firebase/firestore";
   import { db } from "../db/dbconfig.js";
@@ -11,8 +11,8 @@
   let formModal = false;
   let avgWt = 0, avgAge = 0, teamSize = 0;
   let ageClass = "", evtname = "";
-
-  let selectSingleS = false, selectTwoS = false, selectFourS = false, selectFourPS = false, selectEightPS = false, selectXOar = false, selectPMOar = false;
+  
+  let selectSingleS = false, selectTwoS = false, selectFourS = false, selectFourPS = false, selectEightPS = false, selectScullOar = false, selectSweepOar = false;
   
   function findEventDetails() {
     if (evtname.includes("2x") || evtname.includes("2-")) {
@@ -21,16 +21,16 @@
       selectFourS = true;
     } else if (evtname.includes("1x")) {
       selectSingleS = true;
-      selectXOar = true;
-  } else if (evtname.includes("4+")) {
-    selectFourPS = true;
-    selectPMOar = true;
-  } else if (evtname.includes("8+")) {
-    selectEightPS = true;
-    selectPMOar = true;
+      selectScullOar = true;
+    } else if (evtname.includes("4+")) {
+      selectFourPS = true;
+      selectSweepOar = true;
+    } else if (evtname.includes("8+")) {
+      selectEightPS = true;
+      selectSweepOar = true;
+    }
   }
-}
-
+  
   // SUBMITTING TO FIREBASE
   function handleClick() {
     let info = Array(10);
@@ -43,7 +43,8 @@
     info[6] = selected[1].name; // shell
     info[7] = selected[2].name; // oar
     info[8] = selected[3].name; // cox
-    info[9] = average; // avg wt
+    info[9] = avgWt; // avg wt
+    info[10] = avgAge; // avg age
     submitLineUp(info, setTeam());
     formModal = false;
     resetLineUp()
@@ -92,7 +93,7 @@
     }
     avgWt = (sum / numPPL);
   }
-
+  
   // TEAM AVERAGE AGE DISPLAY
   function calculateAvgAge() {
     let numPPL = 0;
@@ -106,7 +107,7 @@
     avgAge = (sum / numPPL);
     calculateAgeClass();
   }
-
+  
   function calculateAgeClass() {
     if (avgAge > 84) {
       ageClass = "K"; 
@@ -134,7 +135,7 @@
       ageClass = "AA"
     }
   }
-
+  
   function getEvtName() {
     evtname = selected[0].name;
     findEventDetails()
@@ -156,7 +157,7 @@
         </option>
         {/each}
       </Select>
-     
+      
     </Label>
     <Label>
       <span> Event Name: {evtname}</span>
@@ -172,65 +173,73 @@
         </option>
         {/each}
       </Select>
-
-        {:else if selectTwoS}
-        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
-          {#each twoShells as shell}
-          <option value={shell}>
-            {shell.name}
-          </option>
-          {/each}
-        </Select>
-
-        {:else if selectFourS}
-        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
-          {#each fourShells as shell}
-          <option value={shell}>
-            {shell.name}
-          </option>
-          {/each}
-        </Select>
-
-        {:else if selectFourPS}
-        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
-          {#each fourPShells as shell}
-          <option value={shell}>
-            {shell.name}
-          </option>
-          {/each}
-        </Select>
-
-        {:else if selectEightPS}
-        <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
-          {#each eightPShells as shell}
-          <option value={shell}>
-            {shell.name}
-          </option>
-          {/each}
-        </Select>
-
-        {/if}        
+      
+      {:else if selectTwoS}
+      <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+        {#each twoShells as shell}
+        <option value={shell}>
+          {shell.name}
+        </option>
+        {/each}
+      </Select>
+      
+      {:else if selectFourS}
+      <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+        {#each fourShells as shell}
+        <option value={shell}>
+          {shell.name}
+        </option>
+        {/each}
+      </Select>
+      
+      {:else if selectFourPS}
+      <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+        {#each fourPShells as shell}
+        <option value={shell}>
+          {shell.name}
+        </option>
+        {/each}
+      </Select>
+      
+      {:else if selectEightPS}
+      <Select bind:value={selected[1]} on:change={() => readShellSize(selected[1].name)} placeholder="Choose">
+        {#each eightPShells as shell}
+        <option value={shell}>
+          {shell.name}
+        </option>
+        {/each}
+      </Select>
+      
+      {/if}        
     </Label>
-
+    
     <Label class="space-y-2">
       <span>Oar</span>
-      {#if selectPMOar}
+      {#if selectScullOar}
       <Select bind:value={selected[2]} placeholder="Choose">
-        {#each pmOars as oar}
+        {#each scullOars as oar}
         <option value={oar}>
           {oar.name}
         </option>
         {/each}
       </Select>
-        {:else if selectXOar}
-        <Select bind:value={selected[2]} placeholder="Choose">
-          {#each xOars as oar}
-          <option value={oar}>
-            {oar.name}
-          </option>
-          {/each}
-          </Select>
-        {/if}        
+      {:else if selectSweepOar}
+      <Select bind:value={selected[2]} placeholder="Choose">
+        {#each sweepOars as oar}
+        <option value={oar}>
+          {oar.name}
+        </option>
+        {/each}
+      </Select>
+      {:else}
+      <Select bind:value={selected[2]} placeholder="Choose">
+        {#each oars as oar}
+        <option value={oar}>
+          {oar.name}
+        </option>
+        {/each}
+      </Select>
+      {/if}      
     </Label>
     
     
