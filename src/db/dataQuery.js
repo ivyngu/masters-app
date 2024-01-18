@@ -30,7 +30,7 @@ const qst = await getDocs(query(collection(db, 'lineups'), where('day', '==', 'T
 export let Thursday = fetchData(qst, "lineups");
 const qsf = await getDocs(query(collection(db, "lineups"), where("day", "==", "Fri")));
 export let Friday = fetchData(qsf, "lineups");
-const qsa = await getDocs(query(collection(db, "lineups"), where("day", "==", "Saturday")));
+const qsa = await getDocs(query(collection(db, "lineups"), where("day", "==", "Sat")));
 export let Saturday = fetchData(qsa, "lineups");
 const qsu = await getDocs(query(collection(db, 'lineups'), where('day', '==', 'Sun')));
 export let Sunday = fetchData(qsu, "lineups");

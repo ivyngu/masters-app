@@ -1,10 +1,10 @@
  <script>
 	import { Tabs, TabItem } from 'flowbite-svelte';
 	import { coxswains, rowers, shells, oars } from '../../../db/dataQuery.js';
-	import AddItemModal from '../../../components/AddItemModal.svelte';
-	import TableView from '../../../components/TableView.svelte';
-	import CoachNavBar from '../../../components/CoachNavBar.svelte';
-	import AddPersonModal from '../../../components/AddPersonModal.svelte';
+	import AddItemModal from '../../../components/coach/AddItemModal.svelte';
+	import TableView from '../../../components/coach/TableView.svelte';
+	import CoachNavBar from '../../../components/coach/CoachNavBar.svelte';
+	import AddPersonModal from '../../../components/coach/AddPersonModal.svelte';
 	import EventTable from '../../../components/EventTable.svelte';
 
 	let rowerModal = false;

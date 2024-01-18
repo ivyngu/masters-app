@@ -2,7 +2,7 @@
 
 <script>
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte'
-    import rriLogo from "./../images/rri.png";
+    import rriLogo from "../../images/rri.png";
 
 </script>
 

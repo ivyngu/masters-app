@@ -1,9 +1,9 @@
 <!-- Coach Admin: Component for adding lineups -->
 <script>
-  import { coxswains, singleShells, twoShells, fourPShells, fourShells, eightPShells, scullOars, sweepOars, rowers, evts, submitLineUp, oars } from '../db/dataQuery.js';
+  import { coxswains, singleShells, twoShells, fourPShells, fourShells, eightPShells, scullOars, sweepOars, rowers, evts, submitLineUp, oars } from '../../db/dataQuery.js';
   import { Button, Modal, Label, Select } from 'flowbite-svelte'
   import { collection, query, getDocs, where } from "firebase/firestore";
-  import { db } from "../db/dbconfig.js";
+  import { db } from "../../db/dbconfig.js";
   
   // evt, shell, oar, cox
   let selected = [], selectedTeam = [], teamLabels = [];

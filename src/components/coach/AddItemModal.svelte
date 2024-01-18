@@ -1,6 +1,6 @@
 <!-- Coach Admin: Component for adding item data (i.e. shells, oars) -->
 <script>
-  import { submit} from '../db/dataQuery.js';
+  import { submit} from '../../db/dataQuery.js';
   import { Button, Modal, Label, Input, Select} from 'flowbite-svelte';
   
   export let formModal;
